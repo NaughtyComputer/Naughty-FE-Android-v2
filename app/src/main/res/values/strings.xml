@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">tuzamate-v2</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="app_name">tuzamate</string>
+    <string name="title_contents">컨텐츠</string>
+    <string name="title_ai">나만의 AI</string>
+    <string name="title_my">마이</string>
 </resources>
