@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "tuzamate-v2"
+rootProject.name = "tuzamate"
 include(":app")
  
