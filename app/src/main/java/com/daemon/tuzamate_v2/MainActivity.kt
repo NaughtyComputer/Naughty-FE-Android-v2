@@ -1,11 +1,9 @@
 package com.daemon.tuzamate_v2
 
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.daemon.tuzamate_v2.databinding.ActivityMainBinding
 
@@ -19,17 +17,36 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navView: BottomNavigationView = binding.navView
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
 
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
-            )
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        val navController = navHostFragment.navController
+
+        // BottomNavigationView 설정
+        binding.bottomNavi.setupWithNavController(navController)
+
+        // BottomNavigationView 아이템 선택 리스너 설정
+        binding.bottomNavi.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_contents -> {
+                    navController.navigate(R.id.navigation_contents)
+                    true
+                }
+                R.id.navigation_ai -> {
+                    navController.navigate(R.id.navigation_ai)
+                    true
+                }
+                R.id.navigation_my -> {
+                    navController.navigate(R.id.navigation_my)
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    fun hideBottomNavigation(state:Boolean){
+        if(state) binding.bottomNavi.visibility = View.GONE else binding.bottomNavi.visibility=
+            View.VISIBLE
     }
 }
