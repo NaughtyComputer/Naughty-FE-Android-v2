@@ -3,7 +3,7 @@
     <style name="onboarding">
         <item name="android:fontStyle">normal</item>
         <item name="android:fontFamily">@font/pretendardsemibold</item>
-        <item name="android:textSize">28sp</item>
+        <item name="android:textSize">24sp</item>
         <item name="android:lineSpacingExtra">6sp</item>
     </style>
     <style name="h1_b">
