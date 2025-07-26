@@ -36,7 +36,7 @@ class SplashFragment : Fragment() {
         navController = view.findNavController()
 
         binding.root.setOnClickListener {
-            navController.navigate(R.id.action_navigationp_splash_to_login)
+            navController.navigate(R.id.action_navigation_splash_to_login)
         }
     }
 
