@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="tabs">
+        <item>뉴스레터</item>
+        <item>광장</item>
+    </array>
+</resources>
