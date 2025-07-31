@@ -5,18 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.daemon.tuzamate_v2.R
-import com.daemon.tuzamate_v2.databinding.FragmentNewsLetterBinding
+import com.daemon.tuzamate_v2.databinding.FragmentPlazaBinding
 
-class NewsLetterFragment : Fragment() {
+class PlazaFragment : Fragment() {
 
-    private var _binding: FragmentNewsLetterBinding? = null
-    private val binding: FragmentNewsLetterBinding
-        get() = requireNotNull(_binding){"FragmentNewsLetterBinding -> null"}
+    private var _binding: FragmentPlazaBinding? = null
+    private val binding: FragmentPlazaBinding
+        get() = requireNotNull(_binding){"FragmentPlazaBinding -> null"}
 
     private lateinit var newsLetterAdapter: NewsLetterAdapter
 
@@ -26,7 +23,7 @@ class NewsLetterFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
 
-        _binding = FragmentNewsLetterBinding.inflate(inflater, container, false)
+        _binding = FragmentPlazaBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -44,7 +41,7 @@ class NewsLetterFragment : Fragment() {
             onNewsLetterItemClick(newsLetter)
         }
 
-        binding.rvNewsLetter.apply {
+        binding.rvPlaza.apply {
             adapter = newsLetterAdapter
             layoutManager = LinearLayoutManager(requireContext())
 
@@ -64,15 +61,6 @@ class NewsLetterFragment : Fragment() {
             ),
             NewsLetter(
                 id = 2
-            ),
-            NewsLetter(
-                id = 3
-            ),
-            NewsLetter(
-                id = 3
-            ),
-            NewsLetter(
-                id = 3
             ),
             NewsLetter(
                 id = 3
