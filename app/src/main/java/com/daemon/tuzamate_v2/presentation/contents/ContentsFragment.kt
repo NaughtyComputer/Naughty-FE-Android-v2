@@ -42,6 +42,10 @@ class ContentsFragment : Fragment() {
             navController.navigate(R.id.action_navigation_contents_to_my_credit)
         }
 
+        binding.bannerBox.setOnClickListener {
+            navController.navigate(R.id.action_navigation_contents_to_article)
+        }
+
         setupViewPager()
         setupCustomTabBar()
     }
