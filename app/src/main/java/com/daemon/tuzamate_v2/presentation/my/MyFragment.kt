@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.daemon.tuzamate_v2.MainActivity
+import com.daemon.tuzamate_v2.R
 import com.daemon.tuzamate_v2.databinding.FragmentMyBinding
 
 class MyFragment : Fragment() {
@@ -34,6 +35,10 @@ class MyFragment : Fragment() {
         navController = view.findNavController()
 
         (requireActivity() as MainActivity).hideBottomNavigation(false)
+
+        binding.btnSetting.setOnClickListener {
+            navController.navigate(R.id.action_navigation_my_to_edit)
+        }
     }
 
     override fun onDestroyView() {
