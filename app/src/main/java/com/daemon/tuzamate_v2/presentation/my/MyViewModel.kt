@@ -11,4 +11,8 @@ class MyViewModel : ViewModel() {
 
     private val _profileImageUrl = MutableLiveData<String>()
     val profileImageUrl: LiveData<String> get() = _profileImageUrl
+    
+    fun setProfileImage(imageRes: Int) {
+        _profileImage.value = imageRes
+    }
 }

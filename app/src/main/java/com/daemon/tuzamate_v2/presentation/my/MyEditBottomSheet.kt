@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.daemon.tuzamate_v2.R
 import com.daemon.tuzamate_v2.databinding.BottomSheetMyEditBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -13,8 +14,6 @@ class MyEditBottomSheet(
 
     private var _binding: BottomSheetMyEditBinding? = null
     private val binding get() = _binding!!
-
-    private var selectedImageRes: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,23 +27,23 @@ class MyEditBottomSheet(
         super.onViewCreated(view, savedInstanceState)
 
         binding.creditRedBox.setOnClickListener {
-            selectedImageRes?.let { onImageSelected(it) }
+            onImageSelected(R.drawable.ic_credit_red)
             dismiss()
         }
         binding.creditBlueBox.setOnClickListener {
-            selectedImageRes?.let { onImageSelected(it) }
+            onImageSelected(R.drawable.ic_credit_blue)
             dismiss()
         }
         binding.creditBlackBox.setOnClickListener {
-            selectedImageRes?.let { onImageSelected(it) }
+            onImageSelected(R.drawable.ic_credit_black)
             dismiss()
         }
         binding.creditGreenBox.setOnClickListener {
-            selectedImageRes?.let { onImageSelected(it) }
+            onImageSelected(R.drawable.ic_credit_green)
             dismiss()
         }
         binding.creditYellowBox.setOnClickListener {
-            selectedImageRes?.let { onImageSelected(it) }
+            onImageSelected(R.drawable.ic_credit_yellow)
             dismiss()
         }
     }

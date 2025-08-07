@@ -48,6 +48,7 @@ class MyEditFragment : Fragment() {
         binding.profileImageBox.setOnClickListener {
             val bottomSheet = MyEditBottomSheet { selectedImage ->
                 selectedProfileImage = selectedImage  // 선택한 이미지 임시 저장
+                myViewModel.setProfileImage(selectedImage)  // ViewModel에 저장
                 binding.profileImage.setImageResource(selectedImage)
             }
             bottomSheet.show(parentFragmentManager, "ProfileImageBottomSheet")
