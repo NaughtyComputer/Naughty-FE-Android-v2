@@ -24,6 +24,8 @@ class ArticleFragment : Fragment() {
 
     private var progressTimer: CountDownTimer? = null
     private var isScreenActive = true
+    private var isLiked = false
+    private var isBookmarked = false
 
     companion object {
         private const val TOTAL_TIME_MS = 10000L
@@ -55,6 +57,32 @@ class ArticleFragment : Fragment() {
     private fun setupClickListeners() {
         binding.btnBack.setOnClickListener {
             navController.popBackStack()
+        }
+        
+        binding.btnLike.setOnClickListener {
+            toggleLike()
+        }
+        
+        binding.btnBookmark.setOnClickListener {
+            toggleBookmark()
+        }
+    }
+    
+    private fun toggleLike() {
+        isLiked = !isLiked
+        if (isLiked) {
+            binding.icLike.setImageResource(R.drawable.ic_like_filled)
+        } else {
+            binding.icLike.setImageResource(R.drawable.ic_like_empty)
+        }
+    }
+    
+    private fun toggleBookmark() {
+        isBookmarked = !isBookmarked
+        if (isBookmarked) {
+            binding.btnBookmark.setImageResource(R.drawable.ic_bookmark_filled)
+        } else {
+            binding.btnBookmark.setImageResource(R.drawable.ic_bookmark_empty)
         }
     }
 
