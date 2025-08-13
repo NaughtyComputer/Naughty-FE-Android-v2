@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_splash">
+    app:startDestination="@+id/navigation_contents">
 
     <fragment
         android:id="@+id/navigation_splash"
@@ -74,6 +74,23 @@
         android:name="com.daemon.tuzamate_v2.presentation.contents.ContentsFragment"
         android:label="fragment_contents"
         tools:layout="@layout/fragment_contents">
+        <action
+            android:id="@+id/action_navigation_contents_to_my_credit"
+            app:destination="@id/navigation_my_credit"
+            app:popUpTo="@id/navigation_contents"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_navigation_contents_to_article"
+            app:destination="@id/navigation_article"
+            app:popUpTo="@id/navigation_contents"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -81,6 +98,56 @@
         android:name="com.daemon.tuzamate_v2.presentation.my.MyFragment"
         android:label="fragment_my"
         tools:layout="@layout/fragment_my">
+        <action
+            android:id="@+id/action_navigation_my_to_edit"
+            app:destination="@id/navigation_my_edit"
+            app:popUpTo="@id/navigation_my"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_my_edit"
+        android:name="com.daemon.tuzamate_v2.presentation.my.MyEditFragment"
+        android:label="fragment_my_edit"
+        tools:layout="@layout/fragment_my_edit">
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_my_credit"
+        android:name="com.daemon.tuzamate_v2.presentation.my.MyCreditFragment"
+        android:label="fragment_my_credit"
+        tools:layout="@layout/fragment_my_credit">
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_news_letter"
+        android:name="com.daemon.tuzamate_v2.presentation.contents.NewsLetterFragment"
+        android:label="fragment_news_letter"
+        tools:layout="@layout/fragment_news_letter">
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_plaza"
+        android:name="com.daemon.tuzamate_v2.presentation.contents.PlazaFragment"
+        android:label="fragment_plaza"
+        tools:layout="@layout/fragment_plaza">
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_article"
+        android:name="com.daemon.tuzamate_v2.presentation.article.ArticleFragment"
+        android:label="fragment_article"
+        tools:layout="@layout/fragment_article">
+    </fragment>
+    
+    <fragment
+        android:id="@+id/navigation_api_test"
+        android:name="com.daemon.tuzamate_v2.presentation.test.ApiTestFragment"
+        android:label="API Test"
+        tools:layout="@layout/fragment_api_test">
     </fragment>
 
 </navigation>
