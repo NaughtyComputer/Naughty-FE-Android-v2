@@ -43,6 +43,10 @@ class MyFragment : Fragment() {
             navController.navigate(R.id.action_navigation_my_to_edit)
         }
         
+        binding.btnApiTest.setOnClickListener {
+            navController.navigate(R.id.navigation_api_test)
+        }
+        
         myViewModel.profileImage.observe(viewLifecycleOwner) { imageRes ->
             imageRes?.let {
                 binding.profileImage.setImageResource(it)
