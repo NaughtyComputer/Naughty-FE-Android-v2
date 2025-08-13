@@ -9,6 +9,34 @@ interface ApiService {
     @GET("profiles")
     suspend fun getProfile(): Response<ProfileResponse>
     
+    @DELETE("profiles")
+    suspend fun deleteProfile(
+        @Body request: DeleteProfileRequest
+    ): Response<DeleteProfileResponse>
+    
+    @POST("profiles/init-profile")
+    suspend fun initProfile(
+        @Body request: InitProfileRequest
+    ): Response<InitProfileResponse>
+    
+    @GET("profiles/likes")
+    suspend fun getProfileLikes(
+        @Query("cursor") cursor: Int = 0,
+        @Query("offset") offset: Int = 10
+    ): Response<LikesResponse>
+    
+    @GET("profiles/posts")
+    suspend fun getProfilePosts(
+        @Query("cursor") cursor: Int = 0,
+        @Query("offset") offset: Int = 10
+    ): Response<PostsResponse>
+    
+    @GET("profiles/scraps")
+    suspend fun getProfileScraps(
+        @Query("cursor") cursor: Int = 0,
+        @Query("offset") offset: Int = 10
+    ): Response<ScrapsResponse>
+    
     @POST("boards/{boardType}/posts")
     suspend fun createPost(
         @Path("boardType") boardType: String,
