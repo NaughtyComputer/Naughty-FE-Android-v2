@@ -6,6 +6,12 @@
         <item name="android:textSize">24sp</item>
         <item name="android:lineSpacingExtra">6sp</item>
     </style>
+    <style name="amount_credit">
+        <item name="android:fontStyle">normal</item>
+        <item name="android:fontFamily">@font/pretendardbold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:lineSpacingExtra">6sp</item>
+    </style>
     <style name="h1_b">
         <item name="android:fontStyle">normal</item>
         <item name="android:fontFamily">@font/pretendardbold</item>
@@ -34,6 +40,11 @@
     <style name="b1_r">
         <item name="android:fontStyle">normal</item>
         <item name="android:fontFamily">@font/pretendardregular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="b1_l">
+        <item name="android:fontStyle">normal</item>
+        <item name="android:fontFamily">@font/pretendardlight</item>
         <item name="android:textSize">16sp</item>
     </style>
     <style name="b2_b">
@@ -70,6 +81,11 @@
         <item name="android:fontStyle">normal</item>
         <item name="android:fontFamily">@font/pretendardregular</item>
         <item name="android:textSize">12sp</item>
+    </style>
+    <style name="d_b">
+        <item name="android:fontStyle">normal</item>
+        <item name="android:fontFamily">@font/pretendardbold</item>
+        <item name="android:textSize">10sp</item>
     </style>
     <style name="d_m">
         <item name="android:fontStyle">normal</item>
