@@ -43,4 +43,25 @@ interface ApiService {
         @Body request: CreatePostRequest
     ): Response<CreatePostResponse>
     
+    @GET("notification")
+    suspend fun getNotifications(
+        @Query("cursor") cursor: Int? = null,
+        @Query("size") size: Int? = null
+    ): Response<NotificationListResponse>
+    
+    @GET("notification/{notificationId}")
+    suspend fun getNotification(
+        @Path("notificationId") notificationId: Int
+    ): Response<NotificationDetailResponse>
+    
+    @DELETE("notification/{notificationId}")
+    suspend fun deleteNotification(
+        @Path("notificationId") notificationId: Int
+    ): Response<NotificationDeleteResponse>
+    
+    @PATCH("notification/{notificationId}")
+    suspend fun markNotificationAsRead(
+        @Path("notificationId") notificationId: Int
+    ): Response<NotificationReadResponse>
+    
 }

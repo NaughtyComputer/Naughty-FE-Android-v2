@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.daemon.tuzamate_v2.data.model.BoardType
 import com.daemon.tuzamate_v2.data.model.InitProfileRequest
+import com.daemon.tuzamate_v2.data.repository.NotificationRepository
 import com.daemon.tuzamate_v2.data.repository.PostRepository
 import com.daemon.tuzamate_v2.data.repository.ProfileRepository
 import com.daemon.tuzamate_v2.databinding.FragmentApiTestBinding
@@ -27,6 +28,9 @@ class ApiTestFragment : Fragment() {
     
     @Inject
     lateinit var postRepository: PostRepository
+    
+    @Inject
+    lateinit var notificationRepository: NotificationRepository
     
     private lateinit var testAdapter: ApiTestAdapter
     private val testResults = mutableListOf<ApiTestResult>()
@@ -83,6 +87,18 @@ class ApiTestFragment : Fragment() {
             
             // 6. 게시글 작성
             testCreatePost()
+            
+            // 7. 알림 목록 조회
+            testGetNotifications()
+            
+            // 8. 단일 알림 조회
+            testGetNotificationDetail()
+            
+            // 9. 알림 읽음 처리
+            testMarkNotificationAsRead()
+            
+            // 10. 알림 삭제
+            testDeleteNotification()
         }
     }
     
@@ -295,6 +311,162 @@ class ApiTestFragment : Fragment() {
                     status = TestStatus.SUCCESS,
                     message = "Post ID: ${post?.result?.id}\n" +
                             "Created: ${post?.result?.createdAt}",
+                    responseCode = response.code()
+                )
+            } else {
+                ApiTestResult(
+                    testName = testName,
+                    status = TestStatus.FAILURE,
+                    message = response.errorBody()?.string() ?: "Unknown error",
+                    responseCode = response.code()
+                )
+            }
+            
+            testResults.add(result)
+            testAdapter.notifyItemInserted(testResults.size - 1)
+        } catch (e: Exception) {
+            testResults.add(
+                ApiTestResult(
+                    testName = testName,
+                    status = TestStatus.ERROR,
+                    message = e.message ?: "Exception occurred",
+                    responseCode = -1
+                )
+            )
+            testAdapter.notifyItemInserted(testResults.size - 1)
+        }
+    }
+    
+    private suspend fun testGetNotifications() {
+        val testName = "알림 목록 조회"
+        try {
+            val response = notificationRepository.getNotifications(cursor = null, size = 10)
+            
+            val result = if (response.isSuccessful) {
+                val notifications = response.body()
+                ApiTestResult(
+                    testName = testName,
+                    status = TestStatus.SUCCESS,
+                    message = "알림 수: ${notifications?.result?.notifications?.size ?: 0}\n" +
+                            "다음 페이지: ${notifications?.result?.hasNext}",
+                    responseCode = response.code()
+                )
+            } else {
+                ApiTestResult(
+                    testName = testName,
+                    status = TestStatus.FAILURE,
+                    message = response.errorBody()?.string() ?: "Unknown error",
+                    responseCode = response.code()
+                )
+            }
+            
+            testResults.add(result)
+            testAdapter.notifyItemInserted(testResults.size - 1)
+        } catch (e: Exception) {
+            testResults.add(
+                ApiTestResult(
+                    testName = testName,
+                    status = TestStatus.ERROR,
+                    message = e.message ?: "Exception occurred",
+                    responseCode = -1
+                )
+            )
+            testAdapter.notifyItemInserted(testResults.size - 1)
+        }
+    }
+    
+    private suspend fun testGetNotificationDetail() {
+        val testName = "단일 알림 조회"
+        try {
+            // 테스트용 알림 ID (실제로는 존재하지 않을 수 있음)
+            val testNotificationId = 1
+            val response = notificationRepository.getNotification(testNotificationId)
+            
+            val result = if (response.isSuccessful) {
+                val notification = response.body()
+                ApiTestResult(
+                    testName = testName,
+                    status = TestStatus.SUCCESS,
+                    message = "제목: ${notification?.result?.title}\n" +
+                            "읽음 여부: ${notification?.result?.isRead}",
+                    responseCode = response.code()
+                )
+            } else {
+                ApiTestResult(
+                    testName = testName,
+                    status = TestStatus.FAILURE,
+                    message = response.errorBody()?.string() ?: "Unknown error",
+                    responseCode = response.code()
+                )
+            }
+            
+            testResults.add(result)
+            testAdapter.notifyItemInserted(testResults.size - 1)
+        } catch (e: Exception) {
+            testResults.add(
+                ApiTestResult(
+                    testName = testName,
+                    status = TestStatus.ERROR,
+                    message = e.message ?: "Exception occurred",
+                    responseCode = -1
+                )
+            )
+            testAdapter.notifyItemInserted(testResults.size - 1)
+        }
+    }
+    
+    private suspend fun testMarkNotificationAsRead() {
+        val testName = "알림 읽음 처리"
+        try {
+            // 테스트용 알림 ID
+            val testNotificationId = 1
+            val response = notificationRepository.markNotificationAsRead(testNotificationId)
+            
+            val result = if (response.isSuccessful) {
+                val notification = response.body()
+                ApiTestResult(
+                    testName = testName,
+                    status = TestStatus.SUCCESS,
+                    message = "알림 읽음 처리 완료\n" +
+                            "읽음 상태: ${notification?.result?.isRead}",
+                    responseCode = response.code()
+                )
+            } else {
+                ApiTestResult(
+                    testName = testName,
+                    status = TestStatus.FAILURE,
+                    message = response.errorBody()?.string() ?: "Unknown error",
+                    responseCode = response.code()
+                )
+            }
+            
+            testResults.add(result)
+            testAdapter.notifyItemInserted(testResults.size - 1)
+        } catch (e: Exception) {
+            testResults.add(
+                ApiTestResult(
+                    testName = testName,
+                    status = TestStatus.ERROR,
+                    message = e.message ?: "Exception occurred",
+                    responseCode = -1
+                )
+            )
+            testAdapter.notifyItemInserted(testResults.size - 1)
+        }
+    }
+    
+    private suspend fun testDeleteNotification() {
+        val testName = "알림 삭제"
+        try {
+            // 테스트용 알림 ID
+            val testNotificationId = 1
+            val response = notificationRepository.deleteNotification(testNotificationId)
+            
+            val result = if (response.isSuccessful) {
+                ApiTestResult(
+                    testName = testName,
+                    status = TestStatus.SUCCESS,
+                    message = "알림 삭제 성공",
                     responseCode = response.code()
                 )
             } else {
