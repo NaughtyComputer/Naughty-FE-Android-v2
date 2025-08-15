@@ -9,12 +9,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import com.daemon.tuzamate_v2.MainActivity
 import com.daemon.tuzamate_v2.R
 import com.daemon.tuzamate_v2.databinding.FragmentArticleBinding
 
+@AndroidEntryPoint
 class ArticleFragment : Fragment() {
 
     private lateinit var navController: NavController
@@ -23,9 +26,8 @@ class ArticleFragment : Fragment() {
         get() = requireNotNull(_binding){"FragmentArticleBinding -> null"}
 
     private var progressTimer: CountDownTimer? = null
+    private val articleViewModel: ArticleViewModel by viewModels()
     private var isScreenActive = true
-    private var isLiked = false
-    private var isBookmarked = false
 
     companion object {
         private const val TOTAL_TIME_MS = 10000L
@@ -51,6 +53,7 @@ class ArticleFragment : Fragment() {
         (requireActivity() as MainActivity).hideBottomNavigation(true)
 
         setupClickListeners()
+        observeViewModel()
         startProgressTimer()
     }
 
@@ -60,29 +63,43 @@ class ArticleFragment : Fragment() {
         }
         
         binding.btnLike.setOnClickListener {
-            toggleLike()
+            articleViewModel.toggleLike()
         }
         
         binding.btnBookmark.setOnClickListener {
-            toggleBookmark()
+            articleViewModel.toggleScrap()
         }
     }
     
-    private fun toggleLike() {
-        isLiked = !isLiked
-        if (isLiked) {
-            binding.icLike.setImageResource(R.drawable.ic_like_filled)
-        } else {
-            binding.icLike.setImageResource(R.drawable.ic_like_empty)
+    private fun observeViewModel() {
+        articleViewModel.postDetail.observe(viewLifecycleOwner) { post ->
+            post?.let {
+                binding.tvContent.text = it.content
+                binding.tvLikeCount.text = it.likeNum.toString()
+                binding.tvCommentCount.text = it.commentNum.toString()
+            }
         }
-    }
-    
-    private fun toggleBookmark() {
-        isBookmarked = !isBookmarked
-        if (isBookmarked) {
-            binding.btnBookmark.setImageResource(R.drawable.ic_bookmark_filled)
-        } else {
-            binding.btnBookmark.setImageResource(R.drawable.ic_bookmark_empty)
+        
+        articleViewModel.isLiked.observe(viewLifecycleOwner) { isLiked ->
+            if (isLiked) {
+                binding.icLike.setImageResource(R.drawable.ic_like_filled)
+            } else {
+                binding.icLike.setImageResource(R.drawable.ic_like_empty)
+            }
+        }
+        
+        articleViewModel.isScraped.observe(viewLifecycleOwner) { isScraped ->
+            if (isScraped) {
+                binding.btnBookmark.setImageResource(R.drawable.ic_bookmark_filled)
+            } else {
+                binding.btnBookmark.setImageResource(R.drawable.ic_bookmark_empty)
+            }
+        }
+        
+        articleViewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -96,7 +113,7 @@ class ArticleFragment : Fragment() {
                     binding.progressBar.progress = progress
 
                     val remainingSeconds = (millisUntilFinished / 1000) + 1
-                     binding.timerText.text = "${remainingSeconds}초" // 필요시 활용
+                     binding.timerText.text = "${remainingSeconds}초"
                 }
             }
 
