@@ -18,21 +18,26 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="120dp"
         android:padding="16dp"
+        android:layout_marginStart="16dp"
         app:layout_constraintStart_toEndOf="@+id/thumbnail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="네이버, 생성형 AI ‘하이퍼클로바X’\n대규모 업그레이드 단행"
+            android:text="네이버, 생성형 AI '하이퍼클로바X'\n대규모 업그레이드 단행"
             android:textColor="@color/T300"
+            android:maxLines="2"
+            android:ellipsize="end"
             style="@style/b3_sb"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -103,6 +108,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/tvLikeCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10"
@@ -131,6 +137,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/tvCommentCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10"
