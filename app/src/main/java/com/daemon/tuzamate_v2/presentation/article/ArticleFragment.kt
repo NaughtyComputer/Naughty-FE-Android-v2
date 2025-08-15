@@ -69,6 +69,12 @@ class ArticleFragment : Fragment() {
         binding.btnBookmark.setOnClickListener {
             articleViewModel.toggleScrap()
         }
+        
+        binding.btnComment.setOnClickListener {
+            val postId = arguments?.getInt("postId") ?: 0
+            val bottomSheet = CommentBottomSheet.newInstance(postId)
+            bottomSheet.show(childFragmentManager, "CommentBottomSheet")
+        }
     }
     
     private fun observeViewModel() {
