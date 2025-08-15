@@ -30,6 +30,8 @@ class PlazaViewModel @Inject constructor(
     
     private var nextCursor: Int? = null
     private val allPosts = mutableListOf<PostPreview>()
+    private val likedPostIds = mutableSetOf<Int>()
+    private val scrapedPostIds = mutableSetOf<Int>()
     
     fun loadPosts(isRefresh: Boolean = false) {
         if (isRefresh) {
@@ -61,12 +63,24 @@ class PlazaViewModel @Inject constructor(
         }
     }
     
-    fun likePost(postId: Int) {
+    fun toggleLike(postId: Int) {
         viewModelScope.launch {
             try {
-                val response = postRepository.likePost(postId)
+                val isLiked = likedPostIds.contains(postId)
+                val response = if (isLiked) {
+                    postRepository.unlikePost(postId)
+                } else {
+                    postRepository.likePost(postId)
+                }
+                
                 if (response.isSuccessful && response.body()?.isSuccess == true) {
-                    updatePostLikeCount(postId, true)
+                    if (isLiked) {
+                        likedPostIds.remove(postId)
+                        updatePostLikeCount(postId, false)
+                    } else {
+                        likedPostIds.add(postId)
+                        updatePostLikeCount(postId, true)
+                    }
                 }
             } catch (e: Exception) {
                 _errorMessage.value = "좋아요 처리 중 오류가 발생했습니다."
@@ -74,25 +88,22 @@ class PlazaViewModel @Inject constructor(
         }
     }
     
-    fun unlikePost(postId: Int) {
+    fun toggleScrap(postId: Int) {
         viewModelScope.launch {
             try {
-                val response = postRepository.unlikePost(postId)
-                if (response.isSuccessful && response.body()?.isSuccess == true) {
-                    updatePostLikeCount(postId, false)
+                val isScraped = scrapedPostIds.contains(postId)
+                val response = if (isScraped) {
+                    postRepository.unscrapPost(postId)
+                } else {
+                    postRepository.scrapPost(postId)
                 }
-            } catch (e: Exception) {
-                _errorMessage.value = "좋아요 취소 중 오류가 발생했습니다."
-            }
-        }
-    }
-    
-    fun scrapPost(postId: Int) {
-        viewModelScope.launch {
-            try {
-                val response = postRepository.scrapPost(postId)
+                
                 if (response.isSuccessful && response.body()?.isSuccess == true) {
-                    // 스크랩 성공 처리
+                    if (isScraped) {
+                        scrapedPostIds.remove(postId)
+                    } else {
+                        scrapedPostIds.add(postId)
+                    }
                 }
             } catch (e: Exception) {
                 _errorMessage.value = "스크랩 처리 중 오류가 발생했습니다."
@@ -100,17 +111,12 @@ class PlazaViewModel @Inject constructor(
         }
     }
     
-    fun unscrapPost(postId: Int) {
-        viewModelScope.launch {
-            try {
-                val response = postRepository.unscrapPost(postId)
-                if (response.isSuccessful && response.body()?.isSuccess == true) {
-                    // 스크랩 취소 성공 처리
-                }
-            } catch (e: Exception) {
-                _errorMessage.value = "스크랩 취소 중 오류가 발생했습니다."
-            }
-        }
+    fun isPostLiked(postId: Int): Boolean {
+        return likedPostIds.contains(postId)
+    }
+    
+    fun isPostScraped(postId: Int): Boolean {
+        return scrapedPostIds.contains(postId)
     }
     
     private fun updatePostLikeCount(postId: Int, isLiked: Boolean) {

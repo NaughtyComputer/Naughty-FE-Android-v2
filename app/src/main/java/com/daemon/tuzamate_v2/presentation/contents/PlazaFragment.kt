@@ -54,7 +54,7 @@ class PlazaFragment : Fragment() {
                 findNavController().navigate(R.id.navigation_article, bundle)
             },
             onLikeClick = { post ->
-                plazaViewModel.likePost(post.id)
+                plazaViewModel.toggleLike(post.id)
             }
         )
 
