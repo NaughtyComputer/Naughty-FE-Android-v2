@@ -5,18 +5,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.daemon.tuzamate_v2.databinding.BottomSheetCommentBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.TimeUnit
 
+@AndroidEntryPoint
 class CommentBottomSheet : BottomSheetDialogFragment() {
 
     private var _binding: BottomSheetCommentBinding? = null
     private val binding get() = _binding!!
     
+    private val viewModel: CommentViewModel by viewModels()
     private lateinit var commentAdapter: CommentAdapter
     private var postId: Int = 0
+    private var replyToCommentId: Int? = null
     
     companion object {
         fun newInstance(postId: Int): CommentBottomSheet {
@@ -48,7 +57,9 @@ class CommentBottomSheet : BottomSheetDialogFragment() {
         setupBottomSheet()
         setupRecyclerView()
         setupInputField()
-        loadComments()
+        observeViewModel()
+        
+        viewModel.setPostId(postId)
     }
     
     private fun setupBottomSheet() {
@@ -90,46 +101,81 @@ class CommentBottomSheet : BottomSheetDialogFragment() {
         binding.btnSend.setOnClickListener {
             val commentText = binding.etComment.text.toString().trim()
             if (commentText.isNotEmpty()) {
-                sendComment(commentText)
+                viewModel.createComment(commentText, replyToCommentId)
                 binding.etComment.text.clear()
+                binding.etComment.hint = "댓글을 입력하세요..."
+                replyToCommentId = null
             }
         }
     }
     
-    private fun loadComments() {
-        val sampleComments = listOf(
-            CommentUIModel(
-                id = 1,
-                nickname = "사용자1",
-                content = "좋은 게시글이네요!",
-                likeCount = 5,
-                replyCount = 2,
-                createdAt = "5분 전",
-                isLiked = false
-            ),
-            CommentUIModel(
-                id = 2,
-                nickname = "사용자2",
-                content = "유익한 정보 감사합니다. 많은 도움이 되었어요!",
-                likeCount = 3,
-                replyCount = 0,
-                createdAt = "10분 전",
-                isLiked = true
-            ),
-            CommentUIModel(
-                id = 3,
-                nickname = "사용자3",
-                content = "더 자세한 설명이 필요할 것 같아요",
-                likeCount = 1,
-                replyCount = 1,
-                createdAt = "30분 전",
-                isLiked = false
-            )
-        )
+    private fun observeViewModel() {
+        viewModel.comments.observe(viewLifecycleOwner) { comments ->
+            val uiModels = comments.map { comment ->
+                CommentUIModel(
+                    id = comment.id,
+                    nickname = comment.writerName ?: "익명",
+                    content = comment.content,
+                    likeCount = 0,
+                    replyCount = 0,
+                    createdAt = getRelativeTimeSpan(comment.createdAt),
+                    isLiked = false
+                )
+            }
+            commentAdapter.submitList(uiModels)
+            updateCommentCount(uiModels.size)
+            updateEmptyView(uiModels.isEmpty())
+            
+            // 새 댓글이 추가되면 RecyclerView를 맨 위로 스크롤
+            if (uiModels.isNotEmpty()) {
+                binding.rvComments.scrollToPosition(0)
+            }
+        }
         
-        commentAdapter.submitList(sampleComments)
-        updateCommentCount(sampleComments.size)
-        updateEmptyView(sampleComments.isEmpty())
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+        
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            error?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                viewModel.clearError()
+            }
+        }
+        
+        viewModel.commentCreated.observe(viewLifecycleOwner) { created ->
+            if (created) {
+                Toast.makeText(requireContext(), "댓글이 작성되었습니다.", Toast.LENGTH_SHORT).show()
+                viewModel.resetCommentCreated()
+                // 키보드 숨기기
+                binding.etComment.clearFocus()
+            }
+        }
+    }
+    
+    private fun getRelativeTimeSpan(dateTimeString: String): String {
+        return try {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+            val date = dateFormat.parse(dateTimeString) ?: return dateTimeString
+            
+            val now = Date()
+            val diffInMillis = now.time - date.time
+            
+            val minutes = TimeUnit.MILLISECONDS.toMinutes(diffInMillis)
+            val hours = TimeUnit.MILLISECONDS.toHours(diffInMillis)
+            val days = TimeUnit.MILLISECONDS.toDays(diffInMillis)
+            
+            when {
+                minutes < 1 -> "방금 전"
+                minutes < 60 -> "${minutes}분 전"
+                hours < 24 -> "${hours}시간 전"
+                days < 30 -> "${days}일 전"
+                days < 365 -> "${days / 30}개월 전"
+                else -> "${days / 365}년 전"
+            }
+        } catch (e: Exception) {
+            dateTimeString
+        }
     }
     
     private fun updateCommentCount(count: Int) {
@@ -146,13 +192,11 @@ class CommentBottomSheet : BottomSheetDialogFragment() {
     }
     
     private fun handleReplyClick(comment: CommentUIModel) {
+        replyToCommentId = comment.id
         binding.etComment.hint = "${comment.nickname}님께 답글 작성 중..."
         binding.etComment.requestFocus()
     }
     
-    private fun sendComment(content: String) {
-        // TODO: API 호출
-    }
     
     override fun onDestroyView() {
         super.onDestroyView()
