@@ -49,7 +49,11 @@ class ArticleViewModel @Inject constructor(
                 val boardTypeEnum = BoardType.valueOf(boardType)
                 val response = postRepository.getPostDetail(boardTypeEnum, postId)
                 if (response.isSuccessful && response.body()?.isSuccess == true) {
-                    _postDetail.value = response.body()?.result
+                    response.body()?.result?.let { detail ->
+                        _postDetail.value = detail
+                        _isLiked.value = detail.liked
+                        _isScraped.value = detail.scraped
+                    }
                 } else {
                     _errorMessage.value = "게시글을 불러오는데 실패했습니다."
                 }

@@ -65,6 +65,10 @@ data class PostDetail(
     val commentNum: Int,
     @SerializedName("isRead")
     val isRead: Boolean,
+    @SerializedName("liked")
+    val liked: Boolean,
+    @SerializedName("scraped")
+    val scraped: Boolean,
     @SerializedName("createdAt")
     val createdAt: String,
     @SerializedName("updatedAt")
