@@ -47,9 +47,26 @@ class MyFragment : Fragment() {
             navController.navigate(R.id.navigation_api_test)
         }
         
+        observeViewModel()
+    }
+    
+    override fun onResume() {
+        super.onResume()
+        // MyEditFragment에서 돌아왔을 때 프로필 정보 다시 로드
+        myViewModel.loadProfile()
+    }
+    
+    private fun observeViewModel() {
         myViewModel.profileImage.observe(viewLifecycleOwner) { imageRes ->
             imageRes?.let {
                 binding.profileImage.setImageResource(it)
+            }
+        }
+        
+        myViewModel.profileData.observe(viewLifecycleOwner) { profileResult ->
+            profileResult?.let { 
+                // 닉네임 업데이트
+                binding.nickname.text = it.myInfo.nickname ?: "닉네임 없음"
             }
         }
     }

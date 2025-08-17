@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.daemon.tuzamate_v2.MainActivity
@@ -21,7 +21,7 @@ class MyEditFragment : Fragment() {
     private val binding: FragmentMyEditBinding
         get() = requireNotNull(_binding){"FragmentMyEditBinding -> null"}
 
-    private val myViewModel: MyViewModel by viewModels()
+    private val myViewModel: MyViewModel by activityViewModels()
 
     private var selectedProfileImage: Int? = null  // 모달에서 선택한 프로필 이미지 (임시 저장)
 
