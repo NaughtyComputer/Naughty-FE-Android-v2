@@ -40,6 +40,7 @@ class PlazaFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
+        setupFab()
         observeViewModel()
         plazaViewModel.loadPosts(isRefresh = true)
     }
@@ -64,6 +65,12 @@ class PlazaFragment : Fragment() {
 
             val divider = DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
             addItemDecoration(divider)
+        }
+    }
+    
+    private fun setupFab() {
+        binding.fabCreatePost.setOnClickListener {
+            findNavController().navigate(R.id.navigation_contents_create)
         }
     }
 
