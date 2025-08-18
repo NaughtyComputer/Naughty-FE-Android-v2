@@ -150,4 +150,11 @@
         tools:layout="@layout/fragment_api_test">
     </fragment>
 
+    <fragment
+        android:id="@+id/navigation_contents_create"
+        android:name="com.daemon.tuzamate_v2.presentation.contents.ContentsCreateFragment"
+        android:label="fragment_contents_create"
+        tools:layout="@layout/fragment_contents_create">
+    </fragment>
+
 </navigation>
