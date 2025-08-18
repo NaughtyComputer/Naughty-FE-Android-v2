@@ -141,5 +141,10 @@ interface ApiService {
         @Path("commentId") commentId: Int,
         @Body request: CommentUpdateRequest
     ): Response<CommentUpdateResponse>
+
+    @POST("auth/kakao-login")
+    suspend fun kakaoLogin(
+        @Body request: KakaoLoginRequest
+    ): Response<KakaoLoginResponse>
     
 }
