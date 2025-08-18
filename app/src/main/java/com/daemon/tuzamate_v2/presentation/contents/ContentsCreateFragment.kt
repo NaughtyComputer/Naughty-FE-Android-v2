@@ -146,6 +146,8 @@ class ContentsCreateFragment : Fragment() {
         contentsCreateViewModel.createSuccess.observe(viewLifecycleOwner) { success ->
             if (success) {
                 Toast.makeText(requireContext(), "게시물이 작성되었습니다.", Toast.LENGTH_SHORT).show()
+                // 이전 화면(PlazaFragment)에 게시글 작성 완료를 알림
+                findNavController().previousBackStackEntry?.savedStateHandle?.set("post_created", true)
                 findNavController().popBackStack()
             }
         }
