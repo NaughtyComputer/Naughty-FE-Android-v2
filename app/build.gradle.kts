@@ -1,9 +1,16 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
 }
+
+val localProperties = Properties()
+localProperties.load(project.rootProject.file("local.properties").inputStream())
+val kakaoApiKey = localProperties.getProperty("kakao_NATIVE_APP_KEY")?:""
+val nativeAppKey = localProperties.getProperty("kakao_NATIVE_APP_KEY_MANIFEST")?:""
 
 android {
     namespace = "com.daemon.tuzamate_v2"
@@ -17,6 +24,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "kakao_NATIVE_APP_KEY", "\"$kakaoApiKey\"")
+        manifestPlaceholders["NATIVE_APP_KEY"] = nativeAppKey
     }
 
     buildTypes {
@@ -37,6 +46,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -73,4 +83,9 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.core)
+
+    implementation(libs.v2.user) // 카카오 로그인 API 모듈
+    implementation(libs.v2.cert) // 카카오톡 인증 서비스 API 모듈
+    implementation(libs.v2.share) // 카카오톡 공유 API 모듈
+
 }
