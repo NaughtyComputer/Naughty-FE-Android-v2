@@ -39,8 +39,8 @@ object NetworkModule {
     
     @Provides
     @Singleton
-    fun provideAuthInterceptor(): AuthInterceptor {
-        return AuthInterceptor()
+    fun provideAuthInterceptor(tokenManager: com.daemon.tuzamate_v2.utils.TokenManager): AuthInterceptor {
+        return AuthInterceptor(tokenManager)
     }
     
     @Provides
