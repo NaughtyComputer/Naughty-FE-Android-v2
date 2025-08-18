@@ -47,7 +47,14 @@ class PlazaViewModel @Inject constructor(
                 val response = postRepository.getPosts(BoardType.FREE, nextCursor)
                 if (response.isSuccessful && response.body()?.isSuccess == true) {
                     response.body()?.result?.let { result ->
-                        allPosts.addAll(result.postPreviewDTOList)
+                        if (isRefresh) {
+                            // 새로고침인 경우 새 데이터를 맨 앞에 추가
+                            allPosts.clear()
+                            allPosts.addAll(result.postPreviewDTOList)
+                        } else {
+                            // 페이지네이션인 경우 뒤에 추가
+                            allPosts.addAll(result.postPreviewDTOList)
+                        }
                         _posts.value = allPosts.toList()
                         nextCursor = result.nextCursor
                         _hasNext.value = result.hasNext

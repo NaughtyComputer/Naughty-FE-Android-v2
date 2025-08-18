@@ -42,7 +42,26 @@ class PlazaFragment : Fragment() {
         setupRecyclerView()
         setupFab()
         observeViewModel()
+        setupNavigationResultListener()
+    }
+    
+    override fun onResume() {
+        super.onResume()
+        // Fragment가 다시 표시될 때마다 게시글 목록 새로고침
         plazaViewModel.loadPosts(isRefresh = true)
+    }
+    
+    private fun setupNavigationResultListener() {
+        // 게시글 작성 화면에서 돌아왔을 때 결과를 받아 처리
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("post_created")
+            ?.observe(viewLifecycleOwner) { postCreated ->
+                if (postCreated) {
+                    // 게시글 목록 새로고침
+                    plazaViewModel.loadPosts(isRefresh = true)
+                    // 플래그 제거
+                    findNavController().currentBackStackEntry?.savedStateHandle?.remove<Boolean>("post_created")
+                }
+            }
     }
 
     private fun setupRecyclerView() {
@@ -76,7 +95,13 @@ class PlazaFragment : Fragment() {
 
     private fun observeViewModel() {
         plazaViewModel.posts.observe(viewLifecycleOwner) { posts ->
-            plazaAdapter.submitList(posts)
+            plazaAdapter.submitList(posts) {
+                // 새 게시글이 추가되었을 때 최상단으로 스크롤
+                // submitList가 완료된 후 실행
+                if (posts.isNotEmpty()) {
+                    binding.rvPlaza.scrollToPosition(0)
+                }
+            }
         }
         
         plazaViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
