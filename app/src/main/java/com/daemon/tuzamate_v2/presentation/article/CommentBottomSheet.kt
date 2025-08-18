@@ -145,10 +145,9 @@ class CommentBottomSheet : BottomSheetDialogFragment() {
         
         viewModel.commentCreated.observe(viewLifecycleOwner) { created ->
             if (created) {
-                Toast.makeText(requireContext(), "댓글이 작성되었습니다.", Toast.LENGTH_SHORT).show()
-                viewModel.resetCommentCreated()
                 // 키보드 숨기기
                 binding.etComment.clearFocus()
+                viewModel.resetCommentCreated()
             }
         }
     }

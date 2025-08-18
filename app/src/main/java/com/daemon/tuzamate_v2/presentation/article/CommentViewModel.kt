@@ -1,5 +1,6 @@
 package com.daemon.tuzamate_v2.presentation.article
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -118,10 +119,12 @@ class CommentViewModel @Inject constructor(
                 )
                 
                 val response = commentRepository.createComment(postId, request)
+                Log.d("CommentViewModel", "Create comment response: ${response.isSuccessful}, status: ${response.body()?.status}, isSuccess: ${response.body()?.isSuccess}")
                 
                 if (response.isSuccessful) {
                     response.body()?.let { baseResponse ->
-                        if (baseResponse.status == "OK" || baseResponse.status == "SUCCESS") {
+                        // isSuccess 필드도 확인
+                        if (baseResponse.isSuccess || baseResponse.status == "OK" || baseResponse.status == "SUCCESS") {
                             _commentCreated.value = true
                             // 댓글 목록을 즉시 새로고침
                             loadComments()
