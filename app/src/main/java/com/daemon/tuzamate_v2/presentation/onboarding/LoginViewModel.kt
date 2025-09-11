@@ -30,6 +30,19 @@ class LoginViewModel @Inject constructor(
             try {
                 val response = authRepository.kakaoLogin(accessToken)
                 if (response.isSuccessful && response.body()?.isSuccess == true) {
+                    response.body()?.result?.let { loginResult ->
+                        // 토큰 저장
+                        tokenManager.saveTokens(
+                            accessToken = loginResult.accessToken,
+                            refreshToken = loginResult.refreshToken
+                        )
+                        // 사용자 정보 저장 (userId만 저장, email과 nickname은 나중에 업데이트)
+                        tokenManager.saveUserInfo(
+                            userId = loginResult.userId,
+                            email = "",
+                            nickname = ""
+                        )
+                    }
                     _loginState.value = LoginState.Success
                 } else {
                     val errorMessage = response.body()?.message ?: "로그인에 실패했습니다."
