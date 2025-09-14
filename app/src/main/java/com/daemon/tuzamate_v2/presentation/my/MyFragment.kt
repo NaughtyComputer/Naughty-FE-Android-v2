@@ -11,8 +11,17 @@ import androidx.navigation.findNavController
 import com.daemon.tuzamate_v2.MainActivity
 import com.daemon.tuzamate_v2.R
 import com.daemon.tuzamate_v2.databinding.FragmentMyBinding
+import com.daemon.tuzamate_v2.utils.CreditManager
+import androidx.lifecycle.lifecycleScope
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MyFragment : Fragment() {
+    
+    @Inject
+    lateinit var creditManager: CreditManager
 
     private lateinit var navController: NavController
     private var _binding: FragmentMyBinding? = null
@@ -48,6 +57,7 @@ class MyFragment : Fragment() {
         }
         
         observeViewModel()
+        observeCredit()
     }
     
     override fun onResume() {
@@ -67,6 +77,16 @@ class MyFragment : Fragment() {
             profileResult?.let { 
                 // 닉네임 업데이트
                 binding.nickname.text = it.myInfo.nickname ?: "닉네임 없음"
+            }
+        }
+    }
+    
+    private fun observeCredit() {
+        lifecycleScope.launch {
+            creditManager.creditFlow.collect { credit ->
+                _binding?.let {
+                    it.amountCredit.text = credit.toString()
+                }
             }
         }
     }

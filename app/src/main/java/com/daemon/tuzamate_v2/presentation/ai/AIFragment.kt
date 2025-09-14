@@ -21,6 +21,7 @@ import com.daemon.tuzamate_v2.data.model.ChatMessage
 import com.daemon.tuzamate_v2.data.repository.ChatRepository
 import com.daemon.tuzamate_v2.databinding.FragmentAiBinding
 import com.daemon.tuzamate_v2.utils.startGlowing
+import com.daemon.tuzamate_v2.utils.CreditManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -31,6 +32,9 @@ class AIFragment : Fragment() {
 
     @Inject
     lateinit var chatRepository: ChatRepository
+    
+    @Inject
+    lateinit var creditManager: CreditManager
 
     private lateinit var navController: NavController
     private var _binding: FragmentAiBinding? = null
@@ -61,6 +65,7 @@ class AIFragment : Fragment() {
         (requireActivity() as MainActivity).hideBottomNavigation(false)
         
         setupRecyclerView()
+        observeCredit()
 
         binding.etAI.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -106,6 +111,18 @@ class AIFragment : Fragment() {
     }
     
     private fun sendMessage(message: String) {
+        // 크레딧 확인
+        if (!creditManager.hasEnoughCredit(creditManager.getCreditForAIChat())) {
+            Toast.makeText(requireContext(), "크레딧이 부족합니다. (필요: ${creditManager.getCreditForAIChat()} 크레딧)", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        // 크레딧 차감
+        if (!creditManager.deductCreditForAIChat()) {
+            Toast.makeText(requireContext(), "크레딧 차감에 실패했습니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
         hideKeyboard(binding.etAI)
         binding.etAI.setBackgroundResource(R.drawable.bg_et_ai_default)
         binding.btnSend.isEnabled = false
@@ -228,6 +245,17 @@ class AIFragment : Fragment() {
     
     private fun scrollToBottom() {
         binding.rvChatMessages.scrollToPosition(chatMessages.size - 1)
+    }
+    
+    private fun observeCredit() {
+        lifecycleScope.launch {
+            creditManager.creditFlow.collect { credit ->
+                // binding이 null이 아닐 때만 UI 업데이트
+                _binding?.let {
+                    it.countCredit.text = credit.toString()
+                }
+            }
+        }
     }
     
     private fun showError(message: String) {

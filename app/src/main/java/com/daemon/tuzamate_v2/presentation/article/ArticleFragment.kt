@@ -16,9 +16,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import com.daemon.tuzamate_v2.MainActivity
 import com.daemon.tuzamate_v2.R
 import com.daemon.tuzamate_v2.databinding.FragmentArticleBinding
+import com.daemon.tuzamate_v2.utils.CreditManager
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ArticleFragment : Fragment() {
+    
+    @Inject
+    lateinit var creditManager: CreditManager
 
     private lateinit var navController: NavController
     private var _binding: FragmentArticleBinding? = null
@@ -133,7 +138,9 @@ class ArticleFragment : Fragment() {
     }
 
     private fun showCompletionToast() {
-        Toast.makeText(this.requireContext(), "리워드 획득!", Toast.LENGTH_LONG).show()
+        // 크레딧 지급
+        creditManager.addCreditForPostView()
+        Toast.makeText(this.requireContext(), "10 크레딧을 획득했습니다!", Toast.LENGTH_LONG).show()
         resetUIToInitialState()
     }
 

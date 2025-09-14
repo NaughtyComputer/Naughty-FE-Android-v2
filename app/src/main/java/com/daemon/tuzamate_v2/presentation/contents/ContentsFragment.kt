@@ -12,8 +12,17 @@ import com.daemon.tuzamate_v2.MainActivity
 import com.daemon.tuzamate_v2.R
 import com.daemon.tuzamate_v2.databinding.FragmentContentsBinding
 import com.daemon.tuzamate_v2.utils.TabPagerAdapter
+import com.daemon.tuzamate_v2.utils.CreditManager
+import androidx.lifecycle.lifecycleScope
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ContentsFragment : Fragment() {
+    
+    @Inject
+    lateinit var creditManager: CreditManager
 
     private lateinit var navController: NavController
     private var _binding: FragmentContentsBinding? = null
@@ -48,6 +57,7 @@ class ContentsFragment : Fragment() {
 
         setupViewPager()
         setupCustomTabBar()
+        observeCredit()
     }
 
     private fun setupViewPager() {
@@ -75,6 +85,16 @@ class ContentsFragment : Fragment() {
     private fun setupCustomTabBar() {
         binding.customTabBar.setOnTabSelectedListener { index ->
             binding.viewPager.currentItem = index
+        }
+    }
+    
+    private fun observeCredit() {
+        lifecycleScope.launch {
+            creditManager.creditFlow.collect { credit ->
+                _binding?.let {
+                    it.countCredit.text = credit.toString()
+                }
+            }
         }
     }
 
