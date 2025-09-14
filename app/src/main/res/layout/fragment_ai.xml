@@ -50,81 +50,15 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ScrollView
-        android:id="@+id/scrollContent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvChatMessages"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:fillViewport="true"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/appBar"
         app:layout_constraintBottom_toTopOf="@+id/etBox"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/chatBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/question"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="사회 초년생의 기초는?"
-                android:textColor="@color/T300"
-                style="@style/b1_sb"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/tuzamateBox"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/question">
-
-                <ImageView
-                    android:id="@+id/iconTuzamateSmall"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_tuzamate"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="답변"
-                    android:textColor="@color/T300"
-                    style="@style/b1_sb"
-                    app:layout_constraintStart_toEndOf="@+id/iconTuzamateSmall"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <TextView
-                android:id="@+id/answer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="투자 메이트가 생각중이에요..."
-                android:textColor="@color/P300"
-                style="@style/b1_sb"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tuzamateBox" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ScrollView
         android:id="@+id/scrollSkeletonUI"

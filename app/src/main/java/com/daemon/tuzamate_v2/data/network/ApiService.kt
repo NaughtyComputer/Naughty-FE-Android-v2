@@ -146,5 +146,4 @@ interface ApiService {
     suspend fun kakaoLogin(
         @Body request: KakaoLoginRequest
     ): Response<KakaoLoginResponse>
-    
 }

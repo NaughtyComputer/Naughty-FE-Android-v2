@@ -67,7 +67,13 @@ class LoginFragment : Fragment() {
                 }
                 is LoginState.Success -> {
                     binding.btnLogin.isEnabled = true
-                    navController.navigate(R.id.action_navigation_login_to_sign_up_nickname)
+                    if (state.needsOnboarding) {
+                        // 온보딩이 필요한 신규 유저
+                        navController.navigate(R.id.action_navigation_login_to_sign_up_nickname)
+                    } else {
+                        // 기존 유저는 메인 화면으로 이동
+                        navController.navigate(R.id.action_navigation_login_to_ai)
+                    }
                 }
                 is LoginState.Error -> {
                     binding.btnLogin.isEnabled = true

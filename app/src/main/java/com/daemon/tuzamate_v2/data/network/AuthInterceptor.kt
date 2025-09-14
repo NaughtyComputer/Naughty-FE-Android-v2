@@ -19,9 +19,6 @@ class AuthInterceptor @Inject constructor(
         "auth/refresh"
     )
     
-    // 임시 하드코딩된 토큰 (테스트용)
-    private val testToken = ""
-    
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val url = request.url.toString()
@@ -36,13 +33,6 @@ class AuthInterceptor @Inject constructor(
             return chain.proceed(request)
         }
         
-        // 임시: 테스트 토큰 사용 (카카오 로그인 구현 완료 후 제거)
-        val newRequest = request.newBuilder()
-            .addHeader("Authorization", "Bearer $testToken")
-            .build()
-        
-        // 원래 코드 (카카오 로그인 구현 완료 후 주석 해제)
-        /*
         // 저장된 토큰 가져오기
         val token = tokenManager.getAccessToken()
         
@@ -54,7 +44,6 @@ class AuthInterceptor @Inject constructor(
         } else {
             request
         }
-        */
         
         return chain.proceed(newRequest)
     }
