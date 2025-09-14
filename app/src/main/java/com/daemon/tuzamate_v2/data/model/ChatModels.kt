@@ -45,3 +45,17 @@ data class ChatMessage(
     val isUser: Boolean,
     val timestamp: Long = System.currentTimeMillis()
 )
+
+// Profile Conflict Request
+data class ProfileConflictRequest(
+    @SerializedName("session_id")
+    val sessionId: String,
+    @SerializedName("choice")
+    val choice: String = "yes"
+)
+
+// Profile Conflict Response
+data class ProfileConflictResult(
+    @SerializedName("message")
+    val message: String
+)

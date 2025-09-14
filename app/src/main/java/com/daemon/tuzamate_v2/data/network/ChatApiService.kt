@@ -20,4 +20,9 @@ interface ChatApiService {
     suspend fun endChatSession(
         @Path("sessionId") sessionId: String
     ): Response<BaseResponse<Any>>
+    
+    @POST("chats/profile/conflict")
+    suspend fun handleProfileConflict(
+        @Body request: ProfileConflictRequest
+    ): Response<BaseResponse<ProfileConflictResult>>
 }

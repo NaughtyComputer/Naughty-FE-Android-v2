@@ -39,4 +39,15 @@ class ChatRepository @Inject constructor(
             chatApiService.endChatSession(sessionId)
         }
     }
+    
+    suspend fun handleProfileConflict(sessionId: String): Response<BaseResponse<ProfileConflictResult>> {
+        return withContext(Dispatchers.IO) {
+            chatApiService.handleProfileConflict(
+                ProfileConflictRequest(
+                    sessionId = sessionId,
+                    choice = "yes"
+                )
+            )
+        }
+    }
 }

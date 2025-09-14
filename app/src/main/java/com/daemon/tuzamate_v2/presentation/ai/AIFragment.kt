@@ -150,37 +150,55 @@ class AIFragment : Fragment() {
                     message = message
                 )
                 
-                if (chatResponse.isSuccessful && chatResponse.body()?.isSuccess == true) {
-                    val result = chatResponse.body()?.result
-                    result?.let {
-                        currentSessionId = it.sessionId
-                        
-                        // Check if response is immediate or requires polling
-                        if (!it.response.isNullOrEmpty()) {
-                            // Direct response available
-                            val aiMessage = ChatMessage(it.response, false)
-                            chatMessages.add(aiMessage)
-                            chatAdapter.submitList(chatMessages.toList())
-                            scrollToBottom()
-                            
-                            // Enable send button
-                            binding.btnSend.isEnabled = true
-                            binding.btnSend.isSelected = true
-                        } else if (!it.taskId.isNullOrEmpty()) {
-                            // Need to poll for task completion
-                            // Add loading message
-                            val loadingMessage = ChatMessage("투자 메이트가 생각중이에요...", false)
-                            chatMessages.add(loadingMessage)
-                            chatAdapter.submitList(chatMessages.toList())
-                            scrollToBottom()
-                            
-                            // Poll for task completion
-                            pollTaskStatus(it.taskId)
-                        } else {
-                            showError("응답을 받을 수 없습니다.")
-                            binding.btnSend.isEnabled = true
-                            binding.btnSend.isSelected = true
+                if (chatResponse.isSuccessful) {
+                    val responseBody = chatResponse.body()
+                    
+                    // 프로필 변경 감지 체크
+                    if (responseBody?.code == "COMMON2001") {
+                        // 프로필 변경 감지됨 - conflict API 호출
+                        responseBody.result?.sessionId?.let { newSessionId ->
+                            currentSessionId = newSessionId
+                            handleProfileConflict(newSessionId)
                         }
+                        return@launch
+                    }
+                    
+                    if (responseBody?.isSuccess == true) {
+                        val result = responseBody.result
+                        result?.let {
+                            currentSessionId = it.sessionId
+                        
+                            // Check if response is immediate or requires polling
+                            if (!it.response.isNullOrEmpty()) {
+                                // Direct response available
+                                val aiMessage = ChatMessage(it.response, false)
+                                chatMessages.add(aiMessage)
+                                chatAdapter.submitList(chatMessages.toList())
+                                scrollToBottom()
+                                
+                                // Enable send button
+                                binding.btnSend.isEnabled = true
+                                binding.btnSend.isSelected = true
+                            } else if (!it.taskId.isNullOrEmpty()) {
+                                // Need to poll for task completion
+                                // Add loading message
+                                val loadingMessage = ChatMessage("투자 메이트가 생각중이에요...", false)
+                                chatMessages.add(loadingMessage)
+                                chatAdapter.submitList(chatMessages.toList())
+                                scrollToBottom()
+                                
+                                // Poll for task completion
+                                pollTaskStatus(it.taskId)
+                            } else {
+                                showError("응답을 받을 수 없습니다.")
+                                binding.btnSend.isEnabled = true
+                                binding.btnSend.isSelected = true
+                            }
+                        }
+                    } else {
+                        showError("메시지 전송에 실패했습니다.")
+                        binding.btnSend.isEnabled = true
+                        binding.btnSend.isSelected = true
                     }
                 } else {
                     showError("메시지 전송에 실패했습니다.")
@@ -265,6 +283,42 @@ class AIFragment : Fragment() {
     private fun hideKeyboard(view: View) {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+    
+    private fun handleProfileConflict(sessionId: String) {
+        lifecycleScope.launch {
+            try {
+                // 프로필 변경 감지 메시지 표시
+                val conflictMessage = ChatMessage("프로필 변경이 감지되었습니다. 변경사항을 적용합니다...", false)
+                chatMessages.add(conflictMessage)
+                chatAdapter.submitList(chatMessages.toList())
+                scrollToBottom()
+                
+                // Conflict API 호출
+                val conflictResponse = chatRepository.handleProfileConflict(sessionId)
+                
+                if (conflictResponse.isSuccessful && conflictResponse.body()?.isSuccess == true) {
+                    // 성공 메시지 표시
+                    val successMessage = conflictResponse.body()?.result?.message 
+                        ?: "프로필이 성공적으로 업데이트되었습니다."
+                    val updateMessage = ChatMessage(successMessage, false)
+                    chatMessages.add(updateMessage)
+                    chatAdapter.submitList(chatMessages.toList())
+                    scrollToBottom()
+                } else {
+                    showError("프로필 업데이트에 실패했습니다.")
+                }
+                
+                // 버튼 다시 활성화
+                binding.btnSend.isEnabled = true
+                binding.btnSend.isSelected = true
+                
+            } catch (e: Exception) {
+                showError("프로필 업데이트 중 오류가 발생했습니다.")
+                binding.btnSend.isEnabled = true
+                binding.btnSend.isSelected = true
+            }
+        }
     }
 
     override fun onDestroyView() {
