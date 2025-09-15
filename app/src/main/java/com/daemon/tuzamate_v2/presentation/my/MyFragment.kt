@@ -13,6 +13,8 @@ import com.daemon.tuzamate_v2.R
 import com.daemon.tuzamate_v2.databinding.FragmentMyBinding
 import com.daemon.tuzamate_v2.utils.CreditManager
 import androidx.lifecycle.lifecycleScope
+import androidx.core.os.bundleOf
+import com.daemon.tuzamate_v2.presentation.contents.PlazaViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -52,10 +54,31 @@ class MyFragment : Fragment() {
             navController.navigate(R.id.action_navigation_my_to_edit)
         }
         
-        binding.btnApiTest.setOnClickListener {
-            navController.navigate(R.id.navigation_api_test)
+//        binding.btnApiTest.setOnClickListener {
+//            navController.navigate(R.id.navigation_api_test)
+//        }
+
+        binding.btnPostWrite.setOnClickListener {
+            val bundle = bundleOf(
+                "contentType" to PlazaViewModel.ContentType.MY_POSTS.name
+            )
+            navController.navigate(R.id.navigation_plaza, bundle)
         }
-        
+
+        binding.btnPostLike.setOnClickListener {
+            val bundle = bundleOf(
+                "contentType" to PlazaViewModel.ContentType.MY_LIKES.name
+            )
+            navController.navigate(R.id.navigation_plaza, bundle)
+        }
+
+        binding.btnPostScrap.setOnClickListener {
+            val bundle = bundleOf(
+                "contentType" to PlazaViewModel.ContentType.MY_SCRAPS.name
+            )
+            navController.navigate(R.id.navigation_plaza, bundle)
+        }
+
         observeViewModel()
         observeCredit()
     }
@@ -72,13 +95,13 @@ class MyFragment : Fragment() {
                 binding.profileImage.setImageResource(it)
             }
         }
-        
+
         myViewModel.profileData.observe(viewLifecycleOwner) { profileResult ->
-            profileResult?.let { 
-                // 닉네임 업데이트
+            profileResult?.let {
                 binding.nickname.text = it.myInfo.nickname ?: "닉네임 없음"
             }
         }
+
     }
     
     private fun observeCredit() {

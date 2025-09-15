@@ -38,7 +38,7 @@ class MyViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = null
-            
+
             try {
                 val response = profileRepository.getProfile()
                 if (response.isSuccessful && response.body()?.isSuccess == true) {
