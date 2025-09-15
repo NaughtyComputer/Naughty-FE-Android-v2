@@ -39,10 +39,36 @@ class PlazaFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupContentType()
         setupRecyclerView()
         setupFab()
         observeViewModel()
         setupNavigationResultListener()
+    }
+
+    private fun setupContentType() {
+        val contentTypeString = arguments?.getString("contentType")
+        contentTypeString?.let {
+            val contentType = PlazaViewModel.ContentType.valueOf(it)
+            plazaViewModel.setContentType(contentType)
+
+            // My 페이지에서 온 경우 FAB 숨기기 및 제목 변경
+            when (contentType) {
+                PlazaViewModel.ContentType.MY_POSTS -> {
+                    binding.fabCreatePost.visibility = View.GONE
+                    // 제목 변경 로직 추가 가능
+                }
+                PlazaViewModel.ContentType.MY_LIKES -> {
+                    binding.fabCreatePost.visibility = View.GONE
+                }
+                PlazaViewModel.ContentType.MY_SCRAPS -> {
+                    binding.fabCreatePost.visibility = View.GONE
+                }
+                PlazaViewModel.ContentType.PLAZA -> {
+                    binding.fabCreatePost.visibility = View.VISIBLE
+                }
+            }
+        }
     }
     
     override fun onResume() {

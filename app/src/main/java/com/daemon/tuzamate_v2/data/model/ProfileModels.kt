@@ -39,7 +39,7 @@ data class InitProfileRequest(
     val experience: String
 )
 
-data class ScrapItem(
+data class MyPostItem(
     @SerializedName("postId")
     val postId: Int,
     @SerializedName("title")
@@ -48,18 +48,18 @@ data class ScrapItem(
     val contentPreview: String
 )
 
-data class ScrapsResult(
+data class MyPostsResult(
     @SerializedName("scraps")
-    val scraps: List<ScrapItem>,
+    val scraps: List<MyPostItem>?,
     @SerializedName("hasNextPage")
     val hasNextPage: Boolean,
     @SerializedName("cursor")
-    val cursor: Int
+    val cursor: Int?
 )
 
 typealias ProfileResponse = BaseResponse<ProfileResult>
 typealias DeleteProfileResponse = BaseResponse<Unit>
 typealias InitProfileResponse = BaseResponse<Unit>
-typealias LikesResponse = BaseResponse<ScrapsResult>
-typealias PostsResponse = BaseResponse<ScrapsResult>
-typealias ScrapsResponse = BaseResponse<ScrapsResult>
+typealias LikesResponse = BaseResponse<MyPostsResult>
+typealias PostsResponse = BaseResponse<MyPostsResult>
+typealias ScrapsResponse = BaseResponse<MyPostsResult>
