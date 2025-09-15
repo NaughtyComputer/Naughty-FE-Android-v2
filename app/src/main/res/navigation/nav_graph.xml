@@ -151,13 +151,6 @@
         android:label="fragment_article"
         tools:layout="@layout/fragment_article">
     </fragment>
-    
-    <fragment
-        android:id="@+id/navigation_api_test"
-        android:name="com.daemon.tuzamate_v2.presentation.test.ApiTestFragment"
-        android:label="API Test"
-        tools:layout="@layout/fragment_api_test">
-    </fragment>
 
     <fragment
         android:id="@+id/navigation_contents_create"
