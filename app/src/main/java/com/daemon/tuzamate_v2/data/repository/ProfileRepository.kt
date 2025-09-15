@@ -1,6 +1,13 @@
 package com.daemon.tuzamate_v2.data.repository
 
-import com.daemon.tuzamate_v2.data.model.*
+import com.daemon.tuzamate_v2.data.model.DeleteProfileRequest
+import com.daemon.tuzamate_v2.data.model.DeleteProfileResponse
+import com.daemon.tuzamate_v2.data.model.InitProfileRequest
+import com.daemon.tuzamate_v2.data.model.InitProfileResponse
+import com.daemon.tuzamate_v2.data.model.LikesResponse
+import com.daemon.tuzamate_v2.data.model.PostsResponse
+import com.daemon.tuzamate_v2.data.model.ProfileResponse
+import com.daemon.tuzamate_v2.data.model.ScrapsResponse
 import com.daemon.tuzamate_v2.data.network.ApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
