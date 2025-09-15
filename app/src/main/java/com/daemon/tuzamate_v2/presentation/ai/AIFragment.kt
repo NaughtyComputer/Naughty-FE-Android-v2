@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -20,7 +19,6 @@ import com.daemon.tuzamate_v2.R
 import com.daemon.tuzamate_v2.data.model.ChatMessage
 import com.daemon.tuzamate_v2.data.repository.ChatRepository
 import com.daemon.tuzamate_v2.databinding.FragmentAiBinding
-import com.daemon.tuzamate_v2.utils.startGlowing
 import com.daemon.tuzamate_v2.utils.CreditManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
